@@ -1,0 +1,255 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww13800\viewh12380\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\i\b\fs36 \cf0 \ul \ulc0 CONCEPTION
+\i0\b0\fs24 \ulnone \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj\partightenfactor0
+
+\i\fs28 \cf0 \ul ESSENTIEL :
+\i0\fs24 \ulnone \
+
+\b 1. 
+\b0 il y a 2 jeux, le premier BikeGame est le jeu qui repr\'e9sente le travail attendu dans la partie 5. Le deuxi\'e8me BikeGame2 est le jeu sur lequel nous avons ajout\'e9 des extensions, ajout\'e9 plus d\'92options etc ( la partie 6).\
+
+\b 2.
+\b0  Afin de ne pas nous r\'e9p\'e9ter nous tenons a vous dire que vous trouverez dans la quasi totalit\'e9 des nos classes des fonctions comme \'ab\'a0graphicCreator(), partCreator(), ***Creator()\'a0\'bb etc\'85 Ces fonctions ont pour but de simplifier le code, de le rendre plus facile \'e0 modifier et plus propre \'e0 lire. Cependant d\'92une classe \'e0 l\'92autre les besoins \'e9taient diff\'e9rents, nous n\'92avons donc pas pu cr\'e9er (par exemple) une interface qui implementerait toutes nos classes.\
+
+\b 3. 
+\b0 Nous avons essay\'e9 de commenter au maximum le code afin d\'92expliquer clairement quelles m\'e9thodes r\'e9alisent quelles actions etc\'85 Si ce fichier \'ab\'a0CONCEPTION\'a0\'bb n\'92est pas assez claire \'e0 certains endroits pour vous, n\'92h\'e9sitez pas a regarder le code et ses commentaires. Merci\
+\
+
+\i\fs28 \ul Partie 3 (Tutoriel) :
+\i0 \ulnone \
+
+\fs24  \
+- Nous avons strictement suivie le tutoriel afin de comprendre le fonctionnement de l\'92API et du moteur graphique. Aucune modification significative a retenir.\
+\
+
+\i\fs28 \ul Partie 4 (Architecture) :
+\i0 \ulnone \
+
+\fs24 \
+- Nous avons gard\'e9 l\'92architecture de base (Actor / ActorGame / GameEntity)\
+\
+
+\b Actor : \
+
+\b0 - Nous avons suivie les instructions du PDF,  Actor est donc une interface qui h\'e9rite des interfaces Graphics et Positionable. L\'92interface est constitu\'e9 de 3 m\'e9thodes : update (pour actualiser un acteur pendant le jeu), destroy (pour d\'e9truire/supprimer un acteur du jeu) et de getEntity (qui sert lorsqu\'92on regarde si l\'92acteur en contact avec x est bien celui qu\'92on veut).\
+\
+
+\b ActorGame :\
+
+\b0 -Nous avons suivie les instructions du PDF. Mais nous avons rajout\'e9 quelques m\'e9thodes. Premi\'e8rement la m\'e9thode getPayLoad() qui est public car elle doit \'eatre accessible et qui retourne l\'92acteur principal du jeu (le v\'e9lo Bike). De plus afin de garder une encapsulation correcte nous n\'92avons pas mit de getWorld() (trop intrusif) et avons donc opt\'e9 pour le rajout de fonction tel que entityConstructor(), WheelConstraintBuilder(), RopeConstraintBuilder() et RevoluteConstraintBuilder() qui permette de construire des entit\'e9s ou contrainte lorsqu\'92on se situ dans d\'92autre classe sans utiliser de getWorld(). Ces m\'e9thodes sont d\'e9clar\'e9 publique  SAUF entityConstructor() car elles doivent \'eatre accessible pour n\'92importe quelle classe qui souhaite construire une contrainte. EntityConstructor() est d\'e9clar\'e9 protected car elle n\'92est utile que pour GameEntity situ\'e9 dans le meme package donc ce n\'92est pas la peine d\'92entendre son autorisation \'e0 publique. Enfin nous avons rajout\'e9 une fonction deleteAllActor() qui permet de supprimer tout les acteur de la liste (en cas de reset par exemple) et qui est d\'e9clar\'e9e prot\'e9g\'e9e car elle n\'92est utile que dans les jeu (BikeGame/BikeGame2) qui h\'e9rite de ActorGame.\
+\
+
+\b GameEntity :\
+
+\b0 -Nous avons ici aussi suivie les instructions du PDF. Nous avons cependant rajout\'e9 quelque fonction utile a notre programme. Tout d\'92abord une fonction PartIn() qui v\'e9rifie que la Part pass\'e9e en argument appartient a l\'92entit\'e9 en question (l\'92acteur). Typiquement cette fonction permet de faire en sorte qu\'92il n\'92y ai pas de collision entre la hitbox du cycliste et les roues car elles sont tous dans le m\'eame acteur : Bike. Cette fonction est d\'e9clar\'e9 prot\'e9g\'e9 car elle n\'92est utile que dans ce package et pour les classes h\'e9ritant de GameEntity. \
+\
+
+\b Crate et CrateGame :\
+
+\b0 -Pour Crate vous pouvez observer l\'92architecture typique que ne utilisons pour nos classes, a savoir quelques attributs indispensables, deux constructeurs (ce ne sera qu\'92un parfois) des m\'e9thodes de type ***Creator() cf. ESSENTIEL 2. Afin de permettre la destruction de la boite, nous ajoutons dans la m\'e9thode destroy une fonctionnalit\'e9 qui supprime l\'92acteur de la liste afin qu\'92il ne soit plus simul\'e9. CrateGame est quand a lui tr\'e8s simple, on declare les caisses dans l\'92initialisation (begin) et ajoute les caisses dans la liste d\'92acteurs de ActorGame. Pas besoin de r\'e9\'e9crire update ou end car nous n\'92ajoutons rien ici.\
+\
+
+\i\fs28 \ul Partie 5  (BikeGame) :\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj\partightenfactor0
+
+\fs24 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj\partightenfactor0
+
+\i0\b \cf0 \ulnone Terrain :\
+
+\b0 - La classe terrain est une classe assez simpliste, nous n\'92avons rien ajout\'e9 de particulier et nous avons utilis\'e9 notre architecture de classe habituelle. CEPENDANT, comme nous devons pouvoir initialiser la forme du terrain depuis sa cr\'e9ation (c\'92est a dire dans BikeGame) nous avons rajout\'e9 dans Bike game quelque attributs/fonctions utile. Nous y viendrons plus tard.\
+\
+
+\b Wheel :\
+
+\b0 - Nous avons suivie les instructions du PDF et utilis\'e9 l\'92architecture habituelle pour cette classe. Nous avons rajout\'e9 cependant plusieurs \'e9l\'e9ments. Tout d\'92abord \'e9tant donn\'e9 que nous avons fait le choix d\'92utiliser des Shape pour dessiner les roues et non pas des image, nous avons cr\'e9\'e9 un \'ab\'a0rayon\'a0\'bb de roue sous forme d\'92une Polyline qui permet de rendre l\'92esth\'e9tique du jeu plus agr\'e9able et aussi de contr\'f4ler si les roues tournent ou pas. (fonction graphicRayon() priv\'e9e bien entendu car utilis\'e9 que dans cette classe). Pour le reste nous avons, comme nous l\'92avons dit, suivi le pdf afin de cr\'e9er les roues, les fonction permettant la motorisation, et la contrainte liant la roue a un v\'e9hicule etc\'85\
+\
+
+\b Bike :\
+
+\b0 - Pour la class Bike nous avons \'e9galement suivie le PDF et utilis\'e9 notre architecture de base. Nous avons cr\'e9er le \'ab\'a0graphisme\'a0\'bb du personnage a l\'92aide de Polyline qui se base sur des getters que nous avons d\'e9clar\'e9 priv\'e9 car ils ne sont utilis\'e9 qu\'92au sein m\'eame de la classe. Afin de contr\'f4le le regard du personnage (et donc le graphique de celui-ci mais aussi la roue motoris\'e9 etc..) nous avons d\'e9clar\'e9 un boolean \'ab\'a0lookRigh\'a0\'bb qui indique si vrai qu\'92on regarde a droite sinon a gauche. Afin de pouvoir modifier ce param\'e8tre et de le v\'e9rifier nous avons cr\'e9\'e9 un get et un set (publique car ils doivent \'eatre accessible dans le contr\'f4le du jeu par exemple). Nous avons aussi dans la classe bike d\'e9finie des fonction publiques telles que accel(), stop() ou relaxMotor() qui on pour but d\'92\'e9purer la class BikeGame en v\'e9rifiant les conditions d\'92acc\'e9l\'e9ration de freinage et de d\'e9sactivation du moteur au sein m\'eame de la class Bike. De plus on trouve une fonction changeWayOfLook() qui permet de changer le graphique du cycliste (sa direction de regard).\
+\
+
+\b Contr\'f4les :\
+
+\b0 Nous avons utilis\'e9 les contr\'f4les recommand\'e9s dans le PDF\
+\
+
+\b Chute :\
+
+\b0 Nous avons impl\'e9ment\'e9 un contact listener a Bike afin de pouvoir d\'e9tecter les chutes/contacts avec la hitBox qui est coupl\'e9 a un boolean qui \'ab\'a0devient\'a0\'bb vrai lorsque la hitBox est touch\'e9e. Nous avons plac\'e9 un getter de ce boolean afin de pouvoir contr\'f4ler dans BikeGame si le personnage a chut\'e9 ou non (voir update() dans BikeGame).\
+\
+
+\b Finish : \
+
+\b0 - Pas de modification par rapport au PDF\
+\
+
+\b Gestion des fin de partie : \
+
+\b0 -idem\
+\
+
+\b BikeGame :\
+
+\b0 -Pour BikeGame nous avons suivie simplement les instruction du PDF. Nous avons laiss\'e9 la d\'e9claration et l\'92initialisation des messages dans la classe BikeGame. Nous avons cependant ajout\'e9 une liste de vecteur et un m\'e9thode permettant d\'92ajouter des vecteur a cette liste addVector(). Cette liste est ensuite pass\'e9 en param\'e8tre dans le constructeur de terrain, ainsi nous avons bien comme demand\'e9 la possibilit\'e9 de changer le terrain lors de l\'92initialisation. \
+\
+
+\b Gestion des exceptions/erreurs :\
+- 
+\b0 Comme demand\'e9 dans le pdf nous avons cod\'e9 la gestions de exceptions. Pour ce faire nous avons fait en sorte que dans chacune des classes poss\'e9dant des constructeur (typiquement les classes repr\'e9sentant des 
+\i Actor
+\i0 ) si un argument pass\'e9 d\'92est pas valide (par exemple une hauteur n\'e9gative) alors on lance \'ab\'a0throw\'a0\'bb une exception de type Ill\'e9galArgumentException a laquelle on ajouter un petit message comme \'ab\'a0The width must be positive\'a0\'bb ou autre en fonction de l\'92argument. Ensuite dans l\'92initialisation du jeu (m\'e9thode Begin() de BikeGame/BikeGame2) en cr\'e9er le bloc \'ab\'a0try\'a0\'bb dans lequel on place toute la construction de nos acteurs et finalement on retrouve apr\'e8s ce bloc un bloc \'ab\'a0catch\'a0\'bb permettant d\'92intercepter les possibles erreurs lanc\'e9 dans les constructeur. (On retrouve \'e9galement un bloc catch v\'e9rifiant que le jeu game de \'ab\'a0ActorGame\'a0\'bb n\'92est pas null ou que la position d\'92un objet n\'92est null non plus) 
+\b \
+
+\b0 \
+
+\i\fs28 \ul Partie 6 (Extensions) :\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj\partightenfactor0
+
+\fs24 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj\partightenfactor0
+
+\i0 \cf0 \ulnone -La partie 6 est sans doute la partie la plus aboutit du projet, vous trouverez dans BikeGame2 le jeu avec toute les extensions.
+\b \
+
+\b0 \
+
+\b 1.Trigger\
+
+\b0 -Nous avons fait l\'92extension Trigger (avec sa d\'e9riv\'e9 object collectable ET checkpoint). Nous avons choisie de cr\'e9er cette classe abstraite et de la faire h\'e9rit\'e9 de GameEntity, ainsi lorsque que nous voudront cr\'e9er un objet h\'e9ritant de Trigger il h\'e9ritera directement de GameEntity. Dans cette classe abstraite on retrouve la cr\'e9ation d\'92une classe \'ab\'a0anonyme\'a0\'bb permettant de cr\'e9er un syst\'e8me de ContactListener propre a Trigger. Nous avons un boolean \'ab\'a0bikeTouch\'a0\'bb qui par d\'e9faut est faux. La classe anonyme permet de detecter les contacts et SI l\'92objet en contact est le v\'e9lo (son entit\'e9 plus pr\'e9cis\'e9ment) alors \'ab\'a0bikeTouch\'a0\'bb est pass\'e9 a true et ainsi nous savons si l\'92objet a \'e9tait en contact avec le v\'e9lo ou non. Nous avons \'e9galement ajout\'e9 des fonctions telles que partBuilderCreator(), graphicCreator() (prot\'e9g\'e9es car seulement utile pour les classes qui h\'e9rite de Trigger) qui sont g\'e9n\'e9rales aux sous classes de Trigger. Nous avons \'e9galement un getter et setter de \'ab\'a0bikeTouch\'a0\'bb a acc\'e8s publique pour permettre d\'92y avoir acc\'e8s (typiquement dans la mettre update du jeu). Une m\'e9thode addContact() permettant de lier le ContactListener a l\'92objet h\'e9ritant de Trigger. \
+\
+
+\b 2. Checkpoint (Trigger)\
+
+\b0 -Nous avons cr\'e9er une classe Checkpoint h\'e9ritant de Trigger. Nous reprenons exactement l\'92architecture fourni par Trigger. Dans le BikeGame2 (m\'e9thode update()) Nous faisons en sorte que lorsque nous avons pass\'e9 le checkpoint nous pouvons y r\'e9apparaitre en gardant nos points acquis AVANT le passage du checkpoint ou autre (cf. code BikeGame2 fonction update()).\
+\
+
+\b 3. FinishTrigger (Trigger)\
+
+\b0 - Ici on a recr\'e9er une classe Finish mais qui cette fois-ci h\'e9rite de Trigger. On a reprit exactement l\'92architecture fournit par Trigger. Pour voir les actions li\'e9e a la ligne d\'92arriv\'e9 il faut aller dans BikeGame2(on a l\'92affichage du score final, un affichage de victoire etc\'85)\
+\
+
+\b 4. Star (object collectionnante Trigger)\
+
+\b0 -Nous avons cr\'e9\'e9 une classe Star qui h\'e9rite de Trigger et qui a pour but de repr\'e9senter des objets collectionnables (des \'e9toiles) qui rapporte 100 points si vous les attraper. L\'92architecture est ici encore typiquement celle fournit par Trigger sans rajout particulier.\
+\
+
+\b 5. Flamme (Trigger)\
+
+\b0 - Cette classe h\'e9rite \'e9galement de Trigger. Comment son nom l\'92indique c\'92est une casse permettant de cr\'e9er des flammes qui nous tue si l\'92on tombe dedans. On a ici \'e9galement reprit l\'92architecture fournit part Trigger sans rajouter de fonction particuli\'e8re mise a part le fait que cette classe poss\'e8de un \'e9metteur de particules. On a donc ajout\'e9 un \'e9metteur et cr\'e9e des particules adapt\'e9es aux flammes. On va donc forc\'e9ment retrouv\'e9 les fonction destroyEmitter() ou encore update() qui permette d\'92actualiser les particules de l\'92\'e9metteur. (cf. Emetteur/Particules/ImageParticule).\
+\
+
+\b 6. Spikes (Trigger)\
+
+\b0 - Nous avons cr\'e9er la classe Spires qui h\'e9rite de Trigger. Cette classe a pour but de repr\'e9senter des pics qui, lorsqu\'92on roule dessus, nous immobilise pendant 5 sec (gr\'e2ce a un aimer cr\'e9er dans BikeGame2). Cette perte de 5seconde entraine une perte de points automatique a la fin du jeu car le temps mit pour faire le parcours rapporte des points. L\'92architecture utilise ici est celle fournit par Trigger, on n\'92y a pas ajout\'e9 fonction particuli\'e8re.\
+\
+
+\b 7. Block\
+
+\b0 -Cette classe est fondamentale, elle permet de cr\'e9er un block en choisissant son graphic, sa hauteur, sa largeur, sa position, a profondeur. Elle est indispensable dans la creation d\'92autre objet (comme des pendules, des bascules) ou meme pour des elements du decors( comme la lune ou le nuage que nous avons plac\'e9 en niveau du start). L\'92architecture de cette classe est simple, elle utilise un constructeur et des ethos de type ***Creator() (cf. ESSENTIEL 2). \
+\
+
+\b 8. Ball\
+
+\b0 -A la meme mani\'e8re que Block, Ball est une classe basique permettant de cr\'e9er des objet circulaire en tout genre. 2 constructeur y sont fouine, l\'92un pour faire des balles avec des ImageGraphics, l\'92autre pour faire des balles avec des ShapeGrahics. On a utilis\'e9 une Architecture classique ici aussi.\
+\
+
+\b 8. Pendules\
+
+\b0 -Nous avons cr\'e9er deux classes pendule Pendulum et PendulumBall. La premiere est un d\'e9rive d\'92un pendule, on y attache en fait un petit bloc a un plus grand (relier par 2 contraintes)  afin de fair une plate-forme non stable qui oscille a la mani\'e8re d\'92un pendule simple. Pour se faire nous utilisons des fonctions permettant la cr\'e9ation de contrainte qui passe par des fonction de ActorGame( voir la section sur ActorGame).\
+-Le deuxi\'e8me pendule PendulumBall est un pendule beaucoup plus simple. C\'92est un pendule classique au bout duquel un balle oscille et il faut l\'92\'e9viter. Afin de cr\'e9er ce pendule on a utiliser des objets comme Block et Ball et nous les avons li\'e9e par une contrainte . \
+\
+
+\b 10. Bascule\
+
+\b0 -Afin de cr\'e9er la bascule (classe Swing) nous nous sommes grandement inspir\'e9 du tutoriel. Nous avons donc utilise Block pour cr\'e9er 2 block et nous les avons li\'e9e face a une contraint que nous cr\'e9ons dans ActorGame (voir section ActorGame). \
+\
+
+\b 11. Terrain glissant\
+
+\b0 - Nous  avons fait le choix de cr\'e9er une classe IceBlock, qui permet de cr\'e9er des blocks de glace comme son nom l\'92indique. Nous avons fais en sorte que la friction de ces bloques soient quasiment nul (0.001) afin d\'92avoir un effet \'ab\'a0glissant\'a0\'bb lorsque le v\'e9lo se d\'e9place sur ces blocks. Nous avons fait le choix de ne pas laisser le choix du graphique avant de garder une certaine coh\'e9rence (la glace rend coh\'e9rent le cot\'e9 glissant, si on cr\'e9er un block de pierre glissant il n\'92y pas plus de sens). On retrouver l\'92architecture classique de nos classes, avec des m\'e9thodes ****Creator() et un constructeur nous permettant de d\'e9finir la position et la taille du block de glace. De plus nous avons d\'e9cid\'e9 d\'92ajouter un \'e9metteur li\'e9 a la cr\'e9ation d\'92un block de glace afin de donner l\'92impression qu\'92il neige sur cette partie du terrain. Ainsi on retrouve les fonction propres aux \'e9metteurs (cf Em\'e9tteur/Particle/ImageParticle). Cela n\'92apporte pas de modification au constructeur car on impose la construction d\'92un \'e9metteur a neige a partir du moment ou on construit un terrain glissant.\
+\
+
+\b 12. Les decors
+\b0 \
+-Plusieurs de nos classes ne sont que des \'ab\'a0d\'e9cors\'a0\'bb, on aurai pu les cr\'e9er a partir de Block ou de Ball. Met certain d\'e9cors peut \'eatre r\'e9p\'e9titif/g\'e9n\'e9ral et donc il nous ait paru plus logique de cr\'e9er des classes telles que TreeSnow qui repr\'e9sente des arbres enneig\'e9s, ou bien Start qui repr\'e9sente le drapeau de d\'e9part d\'92un partie. En cr\'e9ant ces classes a part enti\'e8re on donne la possibilit\'e9 d\'92utilise plus facilement ces d\'e9cors dans le cas ou nous voudront rajouter du d\'e9cors ou cod\'e9 un autre niveau. Ces classes sont simple, h\'e9rite de GameEntity et sont impl\'e9ment\'e9e par Actor. Les mettons sont des simples *****Creator() et un constructeur.\
+\
+
+\b 13. Bike (ajout)\
+
+\b0 - Nous avons ajout\'e9 certaine fonctionnalit\'e9 dans la class Bike. Notamment des fonction comme ArmUp ou NomalWay qui permettent de faire lever les bras du personnage lorsqu\'92il passe un checkpoint par exemple. Tout ces fonctions sont au sein m\'eame de la classe Bike: cela nous permet de garder une bonne encapsulation en limitant au maximum les getter/setter.\
+\
+
+\b 14. BikeExtends\
+
+\b0 -Cette classe est une classe qui h\'e9rit\'e9 de Bike. Nous l\'92avons cr\'e9er afin de pouvoir faire une v\'e9lo qui \'e9met des particules. On aurait pu coder directement sur la classe Bike mais on aurait alors eu aussi le particules sur le v\'e9lo du jeu de la partie 5 (BikeGame) (On aurais aussi pu ajouter un boolean dans le constructeur pour decider lors de la creation si oui ou non l\'92Emetteur sera cr\'e9\'e9, ce sont deux m\'e9thodes possibles. Nous avons choisis la premi\'e8re pour ne pas trop modifier ce que nous avions fait avant). Les fonctions de cette classes sont donc typiquement celle de Bike, \'e0 la seule diff\'e9rence qu\'92on a rajout\'e9 un \'e9metteur de particule sur le v\'e9lo et rajout\'e9 une fonction permettant de d\'e9truire l\'92\'e9metteur seul et \'e9galement une fonction Update() pour actualiser les particules de l\'92emetteur (nous verrons par la suite pourquoi).\
+
+\b \
+15. Particle :\
+
+\b0 - Cette classe abstraite d\'e9finit les caract\'e9ristiques li\'e9s a la position de la particle. En effet, celle-ci n\'92est ni une GameEntity ni un Actor (elle se limitera d\'92implementer ses super-Interfaces: Graphics et Positionable). Le plus important a retenir de ceci est que la particle n\'92a pas d\'92
+\b Entity
+\b0 , elle n\'92a pas de repr\'e9sentation graphique: ce n\'92est qu\'92une representation graphique (pouvant \'eatre positionn\'e9). Il faut donc trouver une autre fa\'e7on de la faire \'93bouger\'94. C\'92est cela dont la classe Particle va se charger. Elle compos\'e9 d\'92attributs caract\'e9risant la position, vitesse et acc\'e9l\'e9ration, et d\'92une m\'e9thode qui fait \'e9voluer celles-ci au cours du temps. Elle est \'e9galement compos\'e9 d\'92une m\'e9thode abstraite copy() qui permettra de copier des particules ais\'e9ment. 
+\b \
+\
+\
+16. ImageParticle :\
+
+\b0 - Cette classe h\'e9rite de Particle. Elle nous permettra de formaliser le dessin de la particule dans le jeu. Comme son nom l\'92indique, elle liera une image png \'e0 chaque Particule. La m\'e9thode draw(), la plus importante de cette classe, affichera la particle selon le Transform de Particle (calcul\'e9 comme on l\'92a dit avec les attributs li\'e9s a la position) et la rendra moins visible \'e0 chaque affichage, \'e0 l\'92aide de l\'92attribut alpha (on aurait \'e9galement pu controller cela depuis l\'92\'e9metteur et ajouter une m\'e9thode reduceAlpha(float a) mais nous avons finalement d\'e9cider de simplifier la chose) . Cette classe est \'e9galement dot\'e9 de tout les setters et getters qui pourront \'eatre utiles.
+\b \
+\
+17. Emitter :\
+
+\b0 - Cette classe regroupera une quantit\'e9 d\'92instances identique (si ce n\'92est par la transparence et la position/vitesse) de la classe Particle (On pourra plus tard en effet distinguer les en un ArrayList. Elle sera d\'e9finie par un forme (Shape) concr\'e8te \'e0 l\'92int\'e9rieur laquelle elle dessinera les particules 
+\b seulement 
+\b0 si celles-ci ont une transparence non nulle (elle sont effac\'e9s et remplac\'e9s par de nouvelles si c\'92est le cas). \'c1 chaque cr\'e9ation d\'92instance de Particle, on utilise la tr\'e8s utile m\'e9thode copy(). On a \'e9galement ajout\'e9 un methode attach() similaire a celle de Wheel mais avec un WeldConstraint cette fois, puisqu\'92on ne veux que l\'92\'e9metteur (en th\'e9orie) ne tourne comme une roue. L\'92\'e9metteur va \'e9galement offrir une methode update qui va permettre a son utilisateur de mettre a jour la position des particules, puisque celles-ci ne sont pas de Actor et ne peuvent donc pas \'eatre misent a jour comme les jusqu\'92ici (par le biais d\'92ActorGame).
+\b \
+
+\b0 \
+\
+\
+
+\b BIKEGAME2\
+
+\b0 -Beaucoup de changement ont \'e9t\'e9 n\'e9cessaire pour le bon fonctionnement du jeu. Tout d\'92abord afin de pouvoir contr\'f4ler au mieux les \'e9v\'e9nements du jeu nous avons du d\'e9clarer certain Acteur au sien m\'eame de la classe BikeGame2 (notamment les \'e9l\'e9ments h\'e9ritant de Trigger  mais aussi le v\'e9lo (Bike)). En d\'e9clarant ces \'e9l\'e9ments nous avons acc\'e8s au fonction publiques qu\'92ils proposent. Nous avons \'e9galement cr\'e9er des timer (ne sachant pas utiliser Timer correctement nous avons cr\'e9\'e9 nos propre timer : des variables qui vont compter le temps qui s\'92\'e9coule apr\'e8s un certain \'e9v\'e9nement). Afin de respecter les consigne donn\'e9es dans la partie 5 les textes que nous avons cr\'e9\'e9 (comme l\'92affichage du temps, du score, des instructions pour reset etc\'85) le sont directement dans le jeu Bikegame2. Pour le m\'e9thode begin() on retrouve quelque chose de similaire a BikeGame sauf que biens\'fbr on a maintenant beaucoup plus d\'92acteurs. Le gros du changement se situe dans la fonction Update(). En effet gr\'e2ce au classe h\'e9ritant de Trigger nous pouvons cr\'e9er bien plus de commandes. Par exemple lorsqu\'92on franchit la ligne on affiche en grand notre score final et un message de victoire. Si l\'92on passe le checkpoint on enregistre la position pour pouvoir donner cette position au v\'e9lo lorsqu\'92on le fera r\'e9apparaitre au niveau du checkpoint. C\'92est aussi ici que l\'92on g\'e8re nos objets collectage, pour notre part lorsqu\'92on collecte une \'e9toile celle ci disparait du jeu et on obtient 100 points suppl\'e9mentaire. Si on touche les pics (spikes) alors on est immobilis\'e9 pendant 5secondes.  On d\'e9finie aussi nos conditions en cas de reset ou restart depuis le checkpoint (remettre les timer a 0 en cas de reset, supprimer les points etc\'85)\
+\
+\
+\
+
+\i\fs28 \ul ARCHITECHTURE \
+\
+
+\i0\fs24 \ulnone Nous avons essay\'e9 de garder une architecture coh\'e9rente et nous allons essayer de la r\'e9sumer ici :\
+\
+
+\b 1.
+\b0  Nos classe \'ab\'a0classiques\'a0\'bb (Block, Ball, Pendulum\'85) sont des classes h\'e9ritant de GameEntity et impl\'e9ment\'e9s par Actor. Elle red\'e9finisse les fonctions fournies et on y retrouve les fonctions de type ****Creator() (cf. ESSENTIEL 2).On retrouve toujours au moins 1 constructeur (parfois 2 cela d\'e9pend de la libert\'e9 qu\'92on a voulu donner pour la cr\'e9ation de ces objets). Ces classes repr\'e9sentent des objets g\'e9n\'e9raux, qu\'92on peut retrouver a plusieurs endroit du jeu et dans diff\'e9rents jeux. \
+\
+
+\b 2.
+\b0  Les classes h\'e9ritant de Trigger. Ces classes ressemblent en tout points aux classes \'ab\'a0classiques\'a0\'bb a la diff\'e9rence que celles ci on un ContactListenner qui permet d\'92enregistrer si il y a eu contact ou non avec l\'92acteur principal du jeu (pour nous le v\'e9lo). Ces classes ne poss\'e8de PAS les actions a faire en cas de contact car cela d\'e9pend du jeu qu\'92on veut cr\'e9er et donc on retrouve tout cela dans la classe BikeGame2. On retrouve dans ces classes les objets qui doivent typiquement \'ab\'a0interagir\'a0\'bb sur le jeu (Finish, Checkpoint, object collectionnable, pics etc\'85)\
+\
+
+\b 3.
+\b0  Les classes poss\'e9dant des \'e9mm\'e9teur de particules, typiquement celle ci peuvent \'eatre soit classiques soit des Trigger. Ces classes ont la particularit\'e9 d\'92\'eatre coupl\'e9es \'e0 un \'e9metteur  qui va propulser des particules dont on choisie la taille, l\'92image etc\'85 On retrouve dans Flamme un \'e9metteur de particule qui donne l\'92impression que le feu est vivant. On a aussi cr\'e9er une classe BikeExtends qui un Bike mais auquel on rajouter un \'e9metteur de particules pour rajouter un cot\'e9 esth\'e9tique et vivant au jeu ou encore nous avons li\'e9 un \'e9metteur \'e0 IceBlock pour donner une impression de neige au dessus du terrain glissant.\
+\
+
+\b 4. 
+\b0 Le jeu en lui m\'eame (BikeGame2). Son r\'f4le est de d\'e9finir les r\'e8gles du jeu. C\'92est  dans cette classe qu\'92on va retrouver les actions a faire en cas de contact avec les classes h\'e9ritant de Trigger(ajouter 100points si on r\'e9cup\'e8re une \'e9toile, immobiliser le personnage si on roule sur les pics etc\'85). Ils contr\'f4les \'e9galement le reset et le restart du checkpoint en r\'e9initialisant les timer, les points etc\'85).  Cette classe g\'e8re \'e9galement la cr\'e9ation du monde.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj\partightenfactor0
+
+\i \cf0 \ul \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj\partightenfactor0
+
+\i0 \cf0 \ulnone \
+\
+}
